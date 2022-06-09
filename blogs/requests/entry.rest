@@ -14,7 +14,7 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-  "title": "the call of the wild1",
+  "title": "the call of the wild",
   "author": "Jack London",
   "url": "hihihaha.com",
   "likes": 8
