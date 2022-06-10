@@ -110,3 +110,28 @@ describe('MOST BLOGS', () => {
     })
   })
 })
+
+describe('MOST LIKES', () => {
+  test('when list is emty, equals the likes of that', () => {
+    const blogs = []
+    const result = listHelper.mostLikes(blogs)
+    expect(result).toEqual({})
+  })
+
+  test(`it should be returned the the author whose blog posts have the largest amount of likes,
+    (If more than one at the top, it is enough to return one of them.)`, () => {
+    const blogs = [...generalBlogs, {
+      _id: '1a422b3a1b54a676234d17f1',
+      title: 'Hahahihi',
+      author: 'Hihihaha',
+      url: 'http://hiha.com',
+      likes: 5,
+      __v: 0
+    }]
+    const result = listHelper.mostLikes(blogs)
+    expect(result).toEqual({
+      author: 'Hihihaha',
+      likes: 17
+    })
+  })
+})

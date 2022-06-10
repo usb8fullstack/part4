@@ -27,6 +27,28 @@ const mostBlogs = (blogs) => {
   return (blogs.length !== 0)
     ? { author: result[0], blogs: result[1] }
     : {}
+
+  // const result = _(blogs)
+  //   .groupBy('author')
+  //   .map((authorGroup, name) => ({
+  //     author: name,
+  //     blogs: _.countBy(authorGroup, 1).undefined,
+  //   }))
+  //   // .value()
+  //   .maxBy((o) => o.blogs)
+  // return (blogs.length !== 0) ? result : {}
+}
+
+const mostLikes = (blogs) => {
+  const result = _(blogs)
+    .groupBy('author')
+    .map((authorGroup, name) => ({
+      author: name,
+      likes: _.sumBy(authorGroup, 'likes'),
+    }))
+    // .value()
+    .maxBy((o) => o.likes)
+  return (blogs.length !== 0) ? result : {}
 }
 
 module.exports = {
@@ -34,4 +56,5 @@ module.exports = {
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 }
