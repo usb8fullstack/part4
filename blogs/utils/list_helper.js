@@ -1,3 +1,4 @@
+var _ = require('lodash')
 // eslint-disable-next-line no-unused-vars
 const dummy = (blogs) => {
   return 1
@@ -17,8 +18,20 @@ const favoriteBlog  = (blogs) => {
   return (blogs.length !== 0) ? blogs.reduce(reducer) : {}
 }
 
+const mostBlogs = (blogs) => {
+  const result = _(blogs)
+    .countBy('author')
+    .entries()
+    // .value()
+    .maxBy((o) => o[1])
+  return (blogs.length !== 0)
+    ? { author: result[0], blogs: result[1] }
+    : {}
+}
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
 }
