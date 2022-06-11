@@ -18,10 +18,9 @@ POST http://localhost:3001/api/users
 Content-Type: application/json
 
 {
-  "title": "",
-  "author": "Jack London",
-  "url": "hihihaha.com",
-  "likes": 8
+  "username": "",
+  "name": "hiha",
+  "password": "123"
 }
 
 ####################################
