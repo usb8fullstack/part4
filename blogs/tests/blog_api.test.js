@@ -9,11 +9,21 @@ const Blog = require('../models/blog')
 beforeEach(async () => {
   await Blog.deleteMany({})
 
-  let blogObject = new Blog(helper.initialBlogs[0])
-  await blogObject.save()
+  // let blogObject = new Blog(helper.initialBlogs[0])
+  // await blogObject.save()
+  // blogObject = new Blog(helper.initialBlogs[1])
+  // await blogObject.save()
 
-  blogObject = new Blog(helper.initialBlogs[1])
-  await blogObject.save()
+  // NOTE: forEach has some issues >>>
+  // const blogObjects = helper.initialBlogs
+  //   .map(blog => new Blog(blog))
+  // const promiseArray = blogObjects.map(blog => blog.save())
+  // await Promise.all(promiseArray)
+
+  for (let blog of helper.initialBlogs) {
+    let blogObject = new Blog(blog)
+    await blogObject.save()
+  }
 })
 
 describe('GET METHOD', () => {
@@ -86,20 +96,38 @@ describe('POST METHOD', () => {
     expect(titles).toContainEqual(0)
   })
 
-  // test('blog without content is not added', async () => {
-  //   const newBlog = {
-  //     likes: 4,
-  //   }
+  test('blog without title is not added', async () => {
+    const newBlog = {
+      // title: '',
+      author: 'haha',
+      url: 'http://www.haha.com',
+      likes: 9,
+    }
 
-  //   await api
-  //     .post('/api/blogs')
-  //     .send(newBlog)
-  //     .expect(400)  // TODO: change route
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
 
-  //   const blogsAtEnd = await helper.blogsInDb()
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)  // NOTE: not +2 post test above !!!
+  })
 
-  //   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
-  // })
+  test('blog without url is not added', async () => {
+    const newBlog = {
+      title: 'journal 4',
+      author: 'haha',
+      likes: 9,
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+    // const blogsAtEnd = await helper.blogsInDb()
+    // expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+  })
 
 })
 

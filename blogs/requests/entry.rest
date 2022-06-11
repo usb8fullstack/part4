@@ -21,6 +21,16 @@ Content-Type: application/json
 }
 
 ###
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "",
+  "author": "Jack London",
+  "url": "hihihaha.com",
+  "likes": 8
+}
+###
 # PUT http://localhost:3001/api/blogs/62a1062e8eed5e181d5c04f6
 # Content-Type: application/json
 
