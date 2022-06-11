@@ -10,7 +10,9 @@ blogsRouter.post('/', async (request, response, next) => {
   const body = request.body
 
   if (!body.title || !body.author || !body.url) {
-    return response.status(400).end()
+    return response.status(400).json({
+      error: 'title, author or url must be not emty'
+    })
   }
 
   const blog = new Blog({
@@ -37,8 +39,8 @@ blogsRouter.get('/:id', async (request, response, next) => {
       response.status(404).end()
     }
   }
-  catch(exception) {
-    next(exception)
+  catch(error) {
+    next(error)
   }
 })
 
@@ -47,8 +49,8 @@ blogsRouter.delete('/:id', async (request, response, next) => {
     await Blog.findByIdAndRemove(request.params.id)
     response.status(204).end()
   }
-  catch (exception) {
-    next(exception)
+  catch (error) {
+    next(error)
   }
 })
 
@@ -56,7 +58,9 @@ blogsRouter.put('/:id', (request, response, next) => {
   const { title, author, url, likes } = request.body
 
   if (!title || !author || !url) {
-    return response.status(400).end()
+    return response.status(400).json({
+      error: 'title, author or url must be not emty'
+    })
   }
 
   Blog
