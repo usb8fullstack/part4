@@ -93,8 +93,8 @@ describe('POST METHOD', () => {
       .expect('Content-Type', /application\/json/)
 
     const blogsAtEnd = await helper.blogsInDb()
-    const titles = blogsAtEnd.map(n => n.likes)
-    expect(titles).toContainEqual(0)
+    const likes = blogsAtEnd.map(n => n.likes)
+    expect(likes).toContainEqual(0)
   })
 
   test('blog without title is not added', async () => {
@@ -167,9 +167,6 @@ describe('GET BY ID METHOD', () => {
 })
 
 
-// ---------------------------------------------
-
-
 describe('DELETE METHOD', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
@@ -194,6 +191,88 @@ describe('DELETE METHOD', () => {
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
   })
+})
+
+
+describe('UPDATE METHOD', () => {
+  test('a blog - with existent valid ID can be updated', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToView = blogsAtStart[0]
+
+    blogToView.title = 'journal hiha'
+    blogToView.likes = 999
+
+    await api
+      .put(`/api/blogs/${blogToView.id}`)
+      .send(blogToView)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const titles = blogsAtEnd.map(n => n.title)
+    expect(titles).toContain('journal hiha')
+    const likes = blogsAtEnd.map(n => n.likes)
+    expect(likes).toContainEqual(999)
+  })
+
+  test(`a blog - with existent valid ID cannot be updated
+  if title, url or author is not valid`, async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToView = blogsAtStart[0]
+
+    blogToView.title = ''
+
+    await api
+      .put(`/api/blogs/${blogToView.id}`)
+      .send(blogToView)
+      .expect(400)
+  })
+
+  test(`a blog - with existent valid ID cannot be updated
+  if properties are invalid type (e.g: new likes is string )`, async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToView = blogsAtStart[0]
+
+    blogToView.likes = 'uuu'
+
+    await api
+      .put(`/api/blogs/${blogToView.id}`)
+      .send(blogToView)
+      .expect(400)
+  })
+
+  test('a blog - with non-existent valid ID cannot be updated', async () => {
+    const validNonexistingId = await helper.nonExistingId()
+
+    const blogUpdate = {
+      title: 'journal 3',
+      author: 'hihi',
+      url: 'http://www.hihi.com',
+      likes: 3,
+    }
+
+    await api
+      .put(`/api/blogs/${validNonexistingId}`)
+      .send(blogUpdate)
+      .expect(404)
+  })
+
+  test('a blog - with invalid ID cannot be updated', async () => {
+    const invalidId = '5a3d5da59070081a82a3445huhu'
+
+    const blogUpdate = {
+      title: 'journal 3',
+      author: 'hihi',
+      url: 'http://www.hihi.com',
+      likes: 3,
+    }
+
+    await api
+      .put(`/api/blogs/${invalidId}`)
+      .send(blogUpdate)
+      .expect(400)
+  })
+
 })
 
 

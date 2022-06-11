@@ -34,10 +34,22 @@ Content-Type: application/json
   "likes": 8
 }
 ###
-# PUT http://localhost:3001/api/blogs/62a1062e8eed5e181d5c04f6
-# Content-Type: application/json
+PUT http://localhost:3001/api/blogs/62a499abf30d8208bb422d29
+Content-Type: application/json
 
-# {
-#     "name": "testtest",
-#     "number": "01234"
-# }
+{
+  "title": "the call of the wild",
+  "author": "Jack London hihihaha",
+  "url": "hihihaha.com",
+  "likes": 8
+}
+###
+PUT http://localhost:3001/api/blogs/62a499abf30d8208bb422d29
+Content-Type: application/json
+
+{
+  "title": "",
+  "author": "Jack London hihihaha",
+  "url": "hihihaha.com",
+  "likes": 8
+}

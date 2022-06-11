@@ -52,4 +52,24 @@ blogsRouter.delete('/:id', async (request, response, next) => {
   }
 })
 
+blogsRouter.put('/:id', (request, response, next) => {
+  const { title, author, url, likes } = request.body
+
+  if (!title || !author || !url) {
+    return response.status(400).end()
+  }
+
+  Blog
+    .findByIdAndUpdate(
+      request.params.id,
+      { title, author, url, likes },
+      { new: true, runValidators: true, context: 'query' }
+    )
+    .then(updatedBlog => {
+      if (updatedBlog) { response.status(200).json(updatedBlog) }
+      else { response.status(404).end() }
+    })
+    .catch(error => next(error))
+})
+
 module.exports = blogsRouter
