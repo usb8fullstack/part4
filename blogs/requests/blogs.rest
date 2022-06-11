@@ -6,13 +6,13 @@ GET http://localhost:3001/api/blogs
 ###
 # GET http://localhost:3001/api/blogs/3
 
-###
+####################################
 DELETE http://localhost:3001/api/blogs/62a48487fcfeca016e7d2006
 
 ###
 DELETE http://localhost:3001/api/blogs/62a48487fcfeca016e7d2006huhu
 
-###
+####################################
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
@@ -33,7 +33,20 @@ Content-Type: application/json
   "url": "hihihaha.com",
   "likes": 8
 }
-###
+
+#################################### WITH USER
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "the call of the wild",
+  "author": "Jack London",
+  "url": "hihihaha.com",
+  "likes": 8,
+  "userId": "62a4c7abc8e6ad6f4fc0ce69"
+}
+
+####################################
 PUT http://localhost:3001/api/blogs/62a499abf30d8208bb422d29
 Content-Type: application/json
 
