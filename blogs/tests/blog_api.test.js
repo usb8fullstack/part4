@@ -66,6 +66,41 @@ describe('POST METHOD', () => {
     const titles = blogsAtEnd.map(n => n.title)
     expect(titles).toContain('journal 3')
   })
+
+  test(`a valid blog without likes property, can be added
+  (likes will be defaulted to the value 0)`, async () => {
+    const newBlog = {
+      title: 'journal 4',
+      author: 'haha',
+      url: 'http://www.haha.com',
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const titles = blogsAtEnd.map(n => n.likes)
+    expect(titles).toContainEqual(0)
+  })
+
+  // test('blog without content is not added', async () => {
+  //   const newBlog = {
+  //     likes: 4,
+  //   }
+
+  //   await api
+  //     .post('/api/blogs')
+  //     .send(newBlog)
+  //     .expect(400)  // TODO: change route
+
+  //   const blogsAtEnd = await helper.blogsInDb()
+
+  //   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+  // })
+
 })
 
 
