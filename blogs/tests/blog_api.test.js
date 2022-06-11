@@ -35,6 +35,13 @@ test('a specific blogs is within the returned notes', async () => {
   expect(titles).toContain('journal 1')
 })
 
+test('verify the existence of property _id', async () => {
+  const response = await api.get('/api/blogs')
+  response.body.forEach(blog => {
+    expect(blog.id).toBeDefined()
+  })
+})
+
 // ---------------------------------------------
 afterAll(() => {
   mongoose.connection.close()
