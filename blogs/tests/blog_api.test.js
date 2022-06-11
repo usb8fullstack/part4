@@ -24,6 +24,7 @@ beforeEach(async () => {
     let blogObject = new Blog(blog)
     await blogObject.save()
   }
+  // await Blog.insertMany(helper.initialBlogs)
 })
 
 describe('GET METHOD', () => {
@@ -110,7 +111,8 @@ describe('POST METHOD', () => {
       .expect(400)
 
     const blogsAtEnd = await helper.blogsInDb()
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)  // NOTE: not +2 post test above !!!
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+    // NOTE: not +2 post test above !!!
   })
 
   test('blog without url is not added', async () => {
@@ -132,7 +134,69 @@ describe('POST METHOD', () => {
 })
 
 
+describe('GET BY ID METHOD', () => {
+  test('succeeds with a valid id', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToView = blogsAtStart[0]
+
+    const resultBlog = await api
+      .get(`/api/blogs/${blogToView.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    const processedBlogToView = JSON.parse(JSON.stringify(blogToView))
+
+    expect(resultBlog.body).toEqual(processedBlogToView)
+  })
+
+  test('fails with statuscode 404 if blog does not exist', async () => {
+    const validNonexistingId = await helper.nonExistingId()
+
+    // console.log(validNonexistingId)
+    await api
+      .get(`/api/blogs/${validNonexistingId}`)
+      .expect(404)
+  })
+
+  test('fails with statuscode 400 id is invalid', async () => {
+    const invalidId = '5a3d5da59070081a82a3445huhu'
+
+    await api
+      .get(`/api/blogs/${invalidId}`)
+      .expect(400)
+  })
+})
+
+
 // ---------------------------------------------
+
+
+describe('DELETE METHOD', () => {
+  test('succeeds with status code 204 if id is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+
+    const titles = blogsAtEnd.map(r => r.title)
+    expect(titles).not.toContain(blogToDelete.title)
+  })
+
+  test('fails with status code 400 if id is invalid', async () => {
+    await api
+      .delete('/api/blogs/62a48487fcfeca016e7d2006huhu')
+      .expect(400)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+  })
+})
+
+
 afterAll(() => {
   mongoose.connection.close()
 })
