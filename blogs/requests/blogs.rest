@@ -45,6 +45,17 @@ Content-Type: application/json
   "likes": 8,
   "userId": "62a4c7abc8e6ad6f4fc0ce69"
 }
+#################################### WITH TOKEN
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhpaGloYWhhIiwiaWQiOiI2MmE1YTNhNGJlZjE3MjJiZTNlNWM1OTciLCJpYXQiOjE2NTUwMjg3Nzl9.UCRIfxkk0lyJijm4L47tzejfMhFy98FlAAYv5LOad-A
+
+{
+  "title": "the call of the wild",
+  "author": "Jack London",
+  "url": "hihihaha.com",
+  "likes": 8
+}
 
 ####################################
 PUT http://localhost:3001/api/blogs/62a499abf30d8208bb422d29
