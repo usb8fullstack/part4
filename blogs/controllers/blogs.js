@@ -18,9 +18,9 @@ blogsRouter.post('/', async (request, response, next) => {
 
   try {
     const decodedToken = jwt.verify(token, process.env.SECRET)
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: 'token missing or invalid' })
-    }
+    // if (!decodedToken.id) {
+    //   return response.status(401).json({ error: 'token missing or invalid' })
+    // }  // NOTE: cause we in try catch >>> no need
     const user = await User.findById(decodedToken.id)
 
     if (!body.title || !body.author || !body.url) {
@@ -39,10 +39,7 @@ blogsRouter.post('/', async (request, response, next) => {
 
     const savedBlog = await blog.save()
 
-    // user.blogs = user.blogs.concat(savedBlog._id)
-    // user.blogs = [...user.blogs, savedBlog._id]
-
-    user.blogs = [savedBlog._id, ...user.blogs]  // database order inside itself
+    user.blogs = [savedBlog._id, ...user.blogs]
     await user.save()
 
     response.status(201).json(savedBlog)
@@ -67,8 +64,17 @@ blogsRouter.get('/:id', async (request, response, next) => {
 
 blogsRouter.delete('/:id', async (request, response, next) => {
   try {
-    await Blog.findByIdAndRemove(request.params.id)
-    response.status(204).end()
+    const blog = await Blog.findById(request.params.id)
+
+    const token = request.token
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+
+    if ( blog.user.toString() === decodedToken.id.toString() ) {
+      await Blog.findByIdAndRemove(request.params.id)
+      response.status(204).end()
+    } else {
+      response.status(401).end('Users can only delete their OWN blogs')
+    }
   }
   catch (error) {
     next(error)

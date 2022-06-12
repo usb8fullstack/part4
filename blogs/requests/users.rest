@@ -8,9 +8,19 @@ POST http://localhost:3001/api/users
 Content-Type: application/json
 
 {
-  "username": "hihihaha",
-  "name": "hiha",
-  "password": "hihihaha"
+  "username": "user1",
+  "name": "one",
+  "password": "passuser1"
+}
+
+###
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "user2",
+  "name": "two",
+  "password": "passuser2"
 }
 
 ###
@@ -19,8 +29,8 @@ Content-Type: application/json
 
 {
   "username": "",
-  "name": "hiha",
-  "password": "123"
+  "name": "three",
+  "password": "passuser3"
 }
 
 ####################################
@@ -28,24 +38,3 @@ DELETE http://localhost:3001/api/users/62a48487fcfeca016e7d2006
 
 ###
 DELETE http://localhost:3001/api/users/62a48487fcfeca016e7d2006huhu
-
-####################################
-PUT http://localhost:3001/api/users/62a499abf30d8208bb422d29
-Content-Type: application/json
-
-{
-  "title": "the call of the wild",
-  "author": "Jack London hihihaha",
-  "url": "hihihaha.com",
-  "likes": 8
-}
-###
-PUT http://localhost:3001/api/users/62a499abf30d8208bb422d29
-Content-Type: application/json
-
-{
-  "title": "",
-  "author": "Jack London hihihaha",
-  "url": "hihihaha.com",
-  "likes": 8
-}
