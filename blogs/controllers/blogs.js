@@ -20,14 +20,9 @@ blogsRouter.post('/', async (request, response, next) => {
     const decodedToken = jwt.verify(token, process.env.SECRET)
     // if (!decodedToken.id) {
     //   return response.status(401).json({ error: 'token missing or invalid' })
-    // }  // NOTE: cause we in try catch >>> no need
+    // }
+    // NOTE: cause we in try catch >>> no need
     const user = await User.findById(decodedToken.id)
-
-    if (!body.title || !body.author || !body.url) {
-      return response.status(400).json({
-        error: 'title, author or url must be not emty'
-      })
-    }
 
     const blog = new Blog({
       title: body.title,
@@ -83,12 +78,6 @@ blogsRouter.delete('/:id', async (request, response, next) => {
 
 blogsRouter.put('/:id', (request, response, next) => {
   const { title, author, url, likes } = request.body
-
-  if (!title || !author || !url) {
-    return response.status(400).json({
-      error: 'title, author or url must be not emty'
-    })
-  }
 
   Blog
     .findByIdAndUpdate(
