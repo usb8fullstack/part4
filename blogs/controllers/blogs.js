@@ -3,13 +3,6 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 
 const jwt = require('jsonwebtoken')
-const getTokenFrom = request => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7)
-  }
-  return null
-}
 
 blogsRouter.get('/', async (request, response) => {
   const blogs =  await Blog.find({}).populate('user',
@@ -21,12 +14,8 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response, next) => {
   const body = request.body
 
-  const token = getTokenFrom(request)
-  if (!token) {
-    return response.status(401).json({ error: 'token must be provided' })
-  }
+  const token = request.token
 
-  // If there is no token passed, it will return error "jwt must be provided".
   try {
     const decodedToken = jwt.verify(token, process.env.SECRET)
     if (!decodedToken.id) {
