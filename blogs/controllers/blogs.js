@@ -1,8 +1,5 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
-
-const jwt = require('jsonwebtoken')
 
 blogsRouter.get('/', async (request, response) => {
   const blogs =  await Blog.find({}).populate('user',
@@ -14,16 +11,9 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response, next) => {
   const body = request.body
 
-  const token = request.token
+  const user = request.user
 
   try {
-    const decodedToken = jwt.verify(token, process.env.SECRET)
-    // if (!decodedToken.id) {
-    //   return response.status(401).json({ error: 'token missing or invalid' })
-    // }
-    // NOTE: cause we in try catch >>> no need
-    const user = await User.findById(decodedToken.id)
-
     const blog = new Blog({
       title: body.title,
       author: body.author,
@@ -60,11 +50,13 @@ blogsRouter.get('/:id', async (request, response, next) => {
 blogsRouter.delete('/:id', async (request, response, next) => {
   try {
     const blog = await Blog.findById(request.params.id)
+    if (!blog) {
+      return response.status(404).end()
+    }
 
-    const token = request.token
-    const decodedToken = jwt.verify(token, process.env.SECRET)
+    const user = request.user
 
-    if ( blog.user.toString() === decodedToken.id.toString() ) {
+    if ( blog.user.toString() === user.id.toString() ) {
       await Blog.findByIdAndRemove(request.params.id)
       response.status(204).end()
     } else {
