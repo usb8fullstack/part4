@@ -5,26 +5,33 @@ const api = supertest(app)
 const helper = require('./test_helper')
 
 const Blog = require('../models/blog')
+const bcrypt = require('bcrypt')
+const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
+let token
 beforeEach(async () => {
+  await User.deleteMany({})
+
+  const userForToken = {}
+  for (let o of helper.initialUsers) {
+    const passwordHash = await bcrypt.hash(o.password, 10)
+    let userObject = new User({ username: o.username, name: o.name, passwordHash })
+    await userObject.save()
+    userForToken.username = userObject.username
+    userForToken.id = userObject._id.toString()
+  }
+
   await Blog.deleteMany({})
-
-  // let blogObject = new Blog(helper.initialBlogs[0])
-  // await blogObject.save()
-  // blogObject = new Blog(helper.initialBlogs[1])
-  // await blogObject.save()
-
-  // NOTE: forEach has some issues >>>
-  // const blogObjects = helper.initialBlogs
-  //   .map(blog => new Blog(blog))
-  // const promiseArray = blogObjects.map(blog => blog.save())
-  // await Promise.all(promiseArray)
-
-  for (let blog of helper.initialBlogs) {
-    let blogObject = new Blog(blog)
+  // await Blog.insertMany(helper.initialBlogs)
+  // NOTE: forEach has some issues with async >>>
+  for (let o of helper.initialBlogs) {
+    o.user = userForToken.id
+    let blogObject = new Blog(o)
     await blogObject.save()
   }
-  // await Blog.insertMany(helper.initialBlogs)
+
+  token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: 60*60 })
 })
 
 describe('GET METHOD', () => {
@@ -57,6 +64,23 @@ describe('GET METHOD', () => {
 
 
 describe('POST METHOD', () => {
+  test('a valid blog cannot be added WITHOUT token ', async () => {
+    const newBlog = {
+      title: 'journal 3',
+      author: 'hihi',
+      url: 'http://www.hihi.com',
+      likes: 3,
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+  })
+
   test('a valid blog can be added ', async () => {
     const newBlog = {
       title: 'journal 3',
@@ -67,6 +91,7 @@ describe('POST METHOD', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -88,6 +113,7 @@ describe('POST METHOD', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -107,6 +133,7 @@ describe('POST METHOD', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400)
 
@@ -124,6 +151,7 @@ describe('POST METHOD', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400)
 
@@ -174,6 +202,7 @@ describe('DELETE METHOD', () => {
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -186,6 +215,7 @@ describe('DELETE METHOD', () => {
   test('fails with status code 400 if id is invalid', async () => {
     await api
       .delete('/api/blogs/62a48487fcfeca016e7d2006huhu')
+      .set('Authorization', `Bearer ${token}`)
       .expect(400)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -204,6 +234,7 @@ describe('UPDATE METHOD', () => {
 
     await api
       .put(`/api/blogs/${blogToView.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .send(blogToView)
       .expect(200)
       .expect('Content-Type', /application\/json/)
@@ -224,6 +255,7 @@ describe('UPDATE METHOD', () => {
 
     await api
       .put(`/api/blogs/${blogToView.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .send(blogToView)
       .expect(400)
   })
@@ -237,6 +269,7 @@ describe('UPDATE METHOD', () => {
 
     await api
       .put(`/api/blogs/${blogToView.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .send(blogToView)
       .expect(400)
   })
@@ -253,6 +286,7 @@ describe('UPDATE METHOD', () => {
 
     await api
       .put(`/api/blogs/${validNonexistingId}`)
+      .set('Authorization', `Bearer ${token}`)
       .send(blogUpdate)
       .expect(404)
   })
@@ -269,6 +303,7 @@ describe('UPDATE METHOD', () => {
 
     await api
       .put(`/api/blogs/${invalidId}`)
+      .set('Authorization', `Bearer ${token}`)
       .send(blogUpdate)
       .expect(400)
   })
