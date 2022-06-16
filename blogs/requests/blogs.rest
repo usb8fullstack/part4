@@ -1,13 +1,13 @@
-GET http://localhost:3001/api/blogs
+GET http://localhost:3003/api/blogs
 
 ###
-GET http://localhost:3001/api/info
+GET http://localhost:3003/api/info
 
 ###
-GET http://localhost:3001/api/blogs/3
+GET http://localhost:3003/api/blogs/3
 
 ####################################
-POST http://localhost:3001/api/blogs
+POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
@@ -18,7 +18,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3001/api/blogs
+POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
@@ -29,7 +29,7 @@ Content-Type: application/json
 }
 
 #################################### WITH USER
-POST http://localhost:3001/api/blogs
+POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
@@ -40,7 +40,7 @@ Content-Type: application/json
   "userId": "62a4c7abc8e6ad6f4fc0ce69"
 }
 #################################### WITH TOKEN
-POST http://localhost:3001/api/blogs
+POST http://localhost:3003/api/blogs
 Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWQiOiI2MmE1ZTBhZWM3ZDk2MjU1NTI2ZGY0ZWUiLCJpYXQiOjE2NTUwNDI1MTksImV4cCI6MTY1NTA0NjExOX0.rU9g5Z446P1Rmtx_9I3Zs2e97w2HIB6UV7FVYSAVo1s
 
@@ -52,7 +52,7 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZ
 }
 
 ####################################
-PUT http://localhost:3001/api/blogs/62a499abf30d8208bb422d29
+PUT http://localhost:3003/api/blogs/62a499abf30d8208bb422d29
 Content-Type: application/json
 
 {
@@ -62,7 +62,7 @@ Content-Type: application/json
   "likes": 8
 }
 ###
-PUT http://localhost:3001/api/blogs/62a499abf30d8208bb422d29
+PUT http://localhost:3003/api/blogs/62a499abf30d8208bb422d29
 Content-Type: application/json
 
 {
@@ -73,12 +73,12 @@ Content-Type: application/json
 }
 
 ####################################
-DELETE http://localhost:3001/api/blogs/62a5e24a24d2addf4a9180cd
+DELETE http://localhost:3003/api/blogs/62a5e24a24d2addf4a9180cd
 
 ###
-DELETE http://localhost:3001/api/blogs/62a48487fcfeca016e7d2006huhu
+DELETE http://localhost:3003/api/blogs/62a48487fcfeca016e7d2006huhu
 
 #################################### WITH TOKEN
-DELETE http://localhost:3001/api/blogs/62a5f31e2dd0e4010410ca3a
+DELETE http://localhost:3003/api/blogs/62a5f31e2dd0e4010410ca3a
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxIiwiaWQiOiI2MmE1ZTBhZWM3ZDk2MjU1NTI2ZGY0ZWUiLCJpYXQiOjE2NTUwNDI1MTksImV4cCI6MTY1NTA0NjExOX0.rU9g5Z446P1Rmtx_9I3Zs2e97w2HIB6UV7FVYSAVo1s
 # Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIyIiwiaWQiOiI2MmE1ZTA2Y2M3ZDk2MjU1NTI2ZGY0ZWIiLCJpYXQiOjE2NTUwNDI1MzQsImV4cCI6MTY1NTA0NjEzNH0.k1G68fA-ojHBOkFYleQWsCee5RLS9w3z_eje8iO3w-U

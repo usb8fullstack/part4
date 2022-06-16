@@ -1,10 +1,10 @@
-GET http://localhost:3001/api/users
+GET http://localhost:3003/api/users
 
 ###
-GET http://localhost:3001/api/users/3
+GET http://localhost:3003/api/users/3
 
 ####################################
-POST http://localhost:3001/api/users
+POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
@@ -14,7 +14,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3001/api/users
+POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
@@ -24,7 +24,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3001/api/users
+POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
@@ -34,7 +34,27 @@ Content-Type: application/json
 }
 
 ####################################
-DELETE http://localhost:3001/api/users/62a48487fcfeca016e7d2006
+DELETE http://localhost:3003/api/users/62a48487fcfeca016e7d2006
 
 ###
-DELETE http://localhost:3001/api/users/62a48487fcfeca016e7d2006huhu
+DELETE http://localhost:3003/api/users/62a48487fcfeca016e7d2006huhu
+
+####################################
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "test-user1",
+  "name": "one",
+  "password": "test-passuser1"
+}
+
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "test-user2",
+  "name": "two",
+  "password": "test-passuser2"
+}
